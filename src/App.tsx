@@ -1,58 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React from "react";
+import { Route, Switch } from "react-router";
+import FooterComponent from "./components/FooterComponent";
+import Navbar from "./components/Navbar";
+import SupportFormStepOne from "./pages/SupportForm/StepOne";
+import SupportFormStepThree from "./pages/SupportForm/StepThree";
+import SupportFormStepTwo from "./pages/SupportForm/StepTwo";
+import { Footer, Header, Main } from "./theme/layout";
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <>
+      <Header>
+        <Navbar />
+      </Header>
+      <Main>
+        <Switch>
+          <Route exact path="/">
+            <SupportFormStepOne />
+          </Route>
+          <Route exact path="/vase-kontaktne-informacie">
+            <SupportFormStepTwo />
+          </Route>
+          <Route exact path="/zhrnutie">
+            <SupportFormStepThree />
+          </Route>
+        </Switch>
+      </Main>
+      <Footer>
+        <FooterComponent />
+      </Footer>
+    </>
   );
-}
+};
 
 export default App;
