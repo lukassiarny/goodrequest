@@ -13,7 +13,8 @@ export const theme = {
   },
   font: {
     familyPrimary: "'Public Sans', sans-serif",
-    fontWeight: "normal",
+    familySecondary: "'Hind', sans-serif",
+    lineHeight: "1.3",
     fontSizeDesktop: "16px",
     fontSizeMobile: "14px",
   },
