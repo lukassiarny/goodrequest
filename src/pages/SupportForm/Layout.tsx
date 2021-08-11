@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import { FlexContainer } from "../../theme/layout";
+import { Container } from "../../theme/layout";
 
-const StyledFlexContainer = styled(FlexContainer)`
+const StyledContainer = styled(Container)`
+  display: flex;
   justify-content: center;
 `;
 
@@ -16,10 +17,10 @@ const ImageWrapper = styled.div`
 
 const SupportUsLayout: React.FC = ({ children }) => {
   return (
-    <StyledFlexContainer>
+    <StyledContainer>
       <FormWrapper>{children}</FormWrapper>
       <ImageWrapper>a</ImageWrapper>
-    </StyledFlexContainer>
+    </StyledContainer>
   );
 };
 

@@ -4,8 +4,12 @@ export const theme = {
   colors: {
     primaryOne: "#CD8B65",
     primaryTwo: "#BB6B3D",
-    text: "#2F2F2F",
-    mainBackground: "#E5E5E5",
+    textPrimary: "#2F2F2F",
+    textLight: "#9F9F9F",
+    textMiddle: "#585757",
+    mainBackground: "#fff",
+    navbarBackground: "#FEFEFE",
+    borderColor: "#DFDFDF",
   },
   font: {
     familyPrimary: "'Public Sans', sans-serif",

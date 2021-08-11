@@ -20,6 +20,10 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     font-smooth: antialiased;
   }
+
+  ul {
+    list-style: none;
+  }
 `;
 
 export default GlobalStyle;

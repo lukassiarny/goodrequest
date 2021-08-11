@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { rem } from "polished";
 
@@ -9,9 +8,16 @@ export const Container = styled.div`
   padding: 0 ${rem(30)};
 `;
 
-export const FlexContainer = styled(Container)`
+export const LayoutWrapper = styled.div`
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+`;
+
+export const LayoutMainContent = styled.div`
+  flex: 1 0 auto;
 `;
 
 export const Header = styled.header`
@@ -24,4 +30,5 @@ export const Main = styled.header`
 
 export const Footer = styled.footer`
   width: 100%;
+  flex-shrink: 0;
 `;
