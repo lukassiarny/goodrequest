@@ -7,11 +7,6 @@ const Wrapper = styled.div`
   display: flex;
 `;
 
-/*background: ${({ isActive, theme }) =>
-isActive
-  ? `linear-gradient(180deg, ${theme.colors.primaryOne} 0%, ${theme.colors.primaryTwo} 100%)`
-  : "#FAF9F9"};*/
-
 const Label = styled.label<{ isActive: boolean }>`
   cursor: pointer;
   position: relative;
