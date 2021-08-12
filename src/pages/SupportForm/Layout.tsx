@@ -12,6 +12,9 @@ const StyledContainer = styled(Container)`
 
 const FormWrapper = styled.div`
   flex: 0 1 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `;
 
 const FormTitle = styled.h1`
@@ -37,6 +40,13 @@ export const Subtitle = styled.h3`
 
 export const InputWrapper = styled.div`
   margin-top: ${rem(16)};
+`;
+
+export const ButtonsWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
 `;
 
 type Props = {

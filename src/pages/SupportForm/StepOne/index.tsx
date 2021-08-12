@@ -1,12 +1,18 @@
 import { rem } from "polished";
 import React from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
+import Button from "../../../components/Button";
 import InputRadio, { TypeOfSupport } from "../../../components/InputRadio";
 import InputSelect, { Option } from "../../../components/InputSelect";
 import InputSelectPrice, {
   OptionPrice,
 } from "../../../components/InputSelectPrice";
-import SupportFormLayout, { Subtitle, InputWrapper } from "../Layout";
+import SupportFormLayout, {
+  Subtitle,
+  InputWrapper,
+  ButtonsWrapper,
+} from "../Layout";
 
 const InpurRadioWrapper = styled.div`
   margin-bottom: ${rem(56)};
@@ -14,6 +20,7 @@ const InpurRadioWrapper = styled.div`
 
 const InputSubtitleWrapper = styled.div`
   margin-bottom: ${rem(40)};
+  width: 100%;
 `;
 
 const SubtitleAboutWrapper = styled.div`
@@ -46,7 +53,7 @@ const SupportFormStepOne: React.FC = () => {
 
   const [selectedShelter, setSelectedShelter] =
     React.useState<Option>(defaultOption);
-  const [shelteroOtions, setShelterOptions] = React.useState<Option[]>([
+  const [shelteroOptions, setShelterOptions] = React.useState<Option[]>([
     { label: "Selected value 1" },
     { label: "Selected value 2" },
     { label: "Selected value 3" },
@@ -55,6 +62,8 @@ const SupportFormStepOne: React.FC = () => {
   const [selectedPrice, setSelectedPrice] = React.useState<OptionPrice | null>(
     optionsPrice[0]
   );
+
+  const history = useHistory();
 
   return (
     <SupportFormLayout
@@ -72,12 +81,14 @@ const SupportFormStepOne: React.FC = () => {
       <InputSubtitleWrapper>
         <SubtitleAboutWrapper>
           <Subtitle>O projekte</Subtitle>
-          <NotRequied>Nepovinné</NotRequied>
+          <NotRequied>
+            {selectedTypeOfSupport === 0 ? "Povinné" : "Nepovinné"}
+          </NotRequied>
         </SubtitleAboutWrapper>
         <InputWrapper>
           <InputSelect
             selected={selectedShelter}
-            options={shelteroOtions}
+            options={shelteroOptions}
             defaultOption={defaultOption}
             handleChange={(option: Option) => setSelectedShelter(option)}
             clearable={false}
@@ -96,6 +107,12 @@ const SupportFormStepOne: React.FC = () => {
           />
         </InputWrapper>
       </InputSubtitleWrapper>
+      <ButtonsWrapper>
+        <Button
+          text="Pokračovať"
+          handleOnClick={() => history.push("/vase-kontaktne-informacie")}
+        />
+      </ButtonsWrapper>
     </SupportFormLayout>
   );
 };
