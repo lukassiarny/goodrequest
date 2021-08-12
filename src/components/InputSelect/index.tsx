@@ -27,11 +27,14 @@ const Selected = styled.div<{
   isOpen: boolean;
   selected: Option;
   defaultOption: Option;
+  error: boolean;
 }>`
   width: 100%;
   cursor: pointer;
   height: ${rem(72)};
-  border: ${rem(1)} solid ${({ theme }) => theme.colors.borderColor};
+  border: ${rem(1)} solid
+    ${({ theme, error }) =>
+      error ? theme.colors.error : theme.colors.borderColor};
   border-radius: ${rem(8)};
   padding: 0 ${rem(24)};
   display: flex;
@@ -101,18 +104,13 @@ const SelectOption = styled.li<{ isOpen: boolean; isSelected: boolean }>`
   }
 `;
 
-const Error = styled.span<{ errorMsg: string }>`
+const ErrorMessage = styled.span`
+  color: ${({ theme }) => theme.colors.error};
+  display: inline-block;
+  margin-top: ${rem(8)};
+  font-size: ${rem(14)};
   position: absolute;
-  width: 100%;
-  margin-top: 0.25rem;
-  left: 0.5rem;
-  top: 100%;
-  font-size: 0.75rem;
-  color: ${({ theme }) => theme.colors.textPrimary};
-  transform-origin: top;
-  transform: ${({ errorMsg }) => (errorMsg ? "scale(1, 1)" : "scale(1, 0)")};
-  opacity: ${({ errorMsg }) => (errorMsg ? "1" : "0")};
-  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+  bottom: ${rem(-22)};
 `;
 
 const SelectMenu: React.FC<Props> = ({
@@ -157,6 +155,7 @@ const SelectMenu: React.FC<Props> = ({
         selected={selected}
         isOpen={isOpen}
         defaultOption={defaultOption as any}
+        error={!!errorMsg}
       >
         <Label>{label}</Label>
         {selected.label}
@@ -188,7 +187,7 @@ const SelectMenu: React.FC<Props> = ({
             </SelectOption>
           ))}
       </SelectOptions>
-      <Error errorMsg={errorMsg}>{errorMsg}</Error>
+      {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
     </SelectWrapper>
   );
 };

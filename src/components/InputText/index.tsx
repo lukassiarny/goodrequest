@@ -49,7 +49,7 @@ const Input = styled.input<{ inputType: "text" | "phone"; error: boolean }>`
     font-family: ${({ theme }) => theme.font.familyPrimary};
     font-size: ${rem(16)};
     line-height: ${rem(21)};
-    color: ${({ theme }) => theme.colors.textLight};
+    color: ${({ theme }) => theme.colors.textPrimary};
     font-weight: 500;
   }
 

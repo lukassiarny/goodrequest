@@ -12,6 +12,7 @@ const StyledContainer = styled(Container)`
 
 const FormWrapper = styled.div`
   flex: 0 1 50%;
+  padding-right: ${rem(15)};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -22,11 +23,12 @@ const FormTitle = styled.h1`
   font-size: ${rem(46)};
   font-weight: 700;
   line-height: ${rem(52)};
-  margin: ${rem(32)} 0;
+  margin: ${rem(32)} 0 ${rem(42)} 0;
 `;
 
 const ImageWrapper = styled.div`
   flex: 0 1 33.3333%;
+  padding-left: ${rem(15)};
 
   & > img {
     max-width: 100%;
@@ -34,8 +36,13 @@ const ImageWrapper = styled.div`
   }
 `;
 
-export const Subtitle = styled.h3`
+export const SubtitleH3 = styled.h3`
   font-weight: 800;
+`;
+
+export const SubtitleH4 = styled.h4`
+  font-weight: 800;
+  font-size: ${rem(14)};
 `;
 
 export const InputWrapper = styled.div`

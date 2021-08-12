@@ -9,7 +9,7 @@ import InputSelectPrice, {
   OptionPrice,
 } from "../../../components/InputSelectPrice";
 import SupportFormLayout, {
-  Subtitle,
+  SubtitleH3,
   InputWrapper,
   InputSubtitleWrapper,
   ButtonsWrapper,
@@ -55,11 +55,38 @@ const SupportFormStepOne: React.FC = () => {
     { label: "Selected value 3" },
   ]);
 
+  const [selectedShelterError, setSelectedShelterError] = React.useState("");
+
   const [selectedPrice, setSelectedPrice] = React.useState<OptionPrice | null>(
     optionsPrice[0]
   );
 
+  const [selectedPriceError, setSelectedPriceError] = React.useState("");
+
   const history = useHistory();
+
+  const handleChangeNextPage = () => {
+    setSelectedShelterError("");
+    setSelectedPriceError("");
+
+    let error = false;
+
+    if (selectedTypeOfSupport === 0 && selectedShelter.value === null) {
+      error = true;
+      setSelectedShelterError("Vyberte útulok, ktorému chcete pômocť.");
+    }
+
+    if (selectedPrice === null) {
+      error = true;
+      setSelectedPriceError("Vyberte sumu, ktorou chcete prispieť");
+    }
+
+    if (error) {
+      return;
+    }
+
+    history.push("/vase-kontaktne-informacie");
+  };
 
   return (
     <SupportFormLayout
@@ -69,14 +96,17 @@ const SupportFormStepOne: React.FC = () => {
       <InpurRadioWrapper>
         <InputRadio
           active={selectedTypeOfSupport}
-          handleChange={(active: TypeOfSupport) =>
-            setSelectedTypeOfSupport(active)
-          }
+          handleChange={(active: TypeOfSupport) => {
+            if (active === 1 && selectedShelterError) {
+              setSelectedShelterError("");
+            }
+            setSelectedTypeOfSupport(active);
+          }}
         />
       </InpurRadioWrapper>
       <InputSubtitleWrapper>
         <SubtitleAboutWrapper>
-          <Subtitle>O projekte</Subtitle>
+          <SubtitleH3>O projekte</SubtitleH3>
           <NotRequied>
             {selectedTypeOfSupport === 0 ? "Povinné" : "Nepovinné"}
           </NotRequied>
@@ -86,28 +116,35 @@ const SupportFormStepOne: React.FC = () => {
             selected={selectedShelter}
             options={shelteroOptions}
             defaultOption={defaultOption}
-            handleChange={(option: Option) => setSelectedShelter(option)}
+            handleChange={(option: Option) => {
+              if (selectedShelterError) {
+                setSelectedShelterError("");
+              }
+              setSelectedShelter(option);
+            }}
             clearable={false}
+            errorMsg={selectedShelterError}
           />
         </InputWrapper>
       </InputSubtitleWrapper>
       <InputSubtitleWrapper>
-        <Subtitle>Suma, ktorou chcem prispieť</Subtitle>
+        <SubtitleH3>Suma, ktorou chcem prispieť</SubtitleH3>
         <InputWrapper>
           <InputSelectPrice
             selected={selectedPrice}
             options={optionsPrice}
-            handleChange={(option: OptionPrice | null) =>
-              setSelectedPrice(option)
-            }
+            handleChange={(option: OptionPrice | null) => {
+              if (selectedPriceError) {
+                setSelectedPriceError("");
+              }
+              setSelectedPrice(option);
+            }}
+            errorMsg={selectedPriceError}
           />
         </InputWrapper>
       </InputSubtitleWrapper>
       <ButtonsWrapper>
-        <Button
-          text="Pokračovať"
-          handleOnClick={() => history.push("/vase-kontaktne-informacie")}
-        />
+        <Button text="Pokračovať" handleOnClick={handleChangeNextPage} />
       </ButtonsWrapper>
     </SupportFormLayout>
   );

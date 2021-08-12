@@ -3,6 +3,11 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { InputWrapper } from "../../pages/SupportForm/Layout";
 
+const Wrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
 const StyledInputWrapper = styled(InputWrapper)`
   display: flex;
   width: 100%;
@@ -61,8 +66,16 @@ const NumberInputField = styled.input<{ isActive: boolean }>`
         `
       : css`
           color: ${theme.colors.textPrimary};
-          border-color: ${({ theme }) => theme.colors.borderColor};
+          border-color: ${theme.colors.borderColor};
         `}
+`;
+
+const ErrorMessage = styled.span`
+  color: ${({ theme }) => theme.colors.error};
+  display: inline-block;
+  font-size: ${rem(14)};
+  position: absolute;
+  bottom: ${rem(-14)};
 `;
 
 export type OptionPrice = {
@@ -76,6 +89,7 @@ type Props = {
   defaultValue?: OptionPrice;
   handleChange: (option: OptionPrice | null) => void;
   hasDynamicInput?: boolean;
+  errorMsg?: string;
 };
 
 const Price: React.FC<Props> = ({
@@ -83,69 +97,73 @@ const Price: React.FC<Props> = ({
   selected,
   handleChange,
   hasDynamicInput = true,
+  errorMsg,
 }) => {
   const [dynamicInputValue, setDynamicInputValue] = React.useState("");
   const [isDynamicInputActive, setIsDynamicInputActive] = React.useState(false);
   const dynamicInputRef = React.useRef<HTMLInputElement | null>(null);
 
   return (
-    <StyledInputWrapper>
-      {options &&
-        options.length > 0 &&
-        options.map((o: OptionPrice, i) => {
-          if (o.type === "dynamic") {
-            return null;
-          }
-
-          return (
-            <Input
-              key={i}
-              isActive={selected?.value === o.value && !isDynamicInputActive}
-              onClick={() => {
-                if (isDynamicInputActive) {
-                  setIsDynamicInputActive(false);
-                }
-                handleChange(o);
-              }}
-            >
-              {o.value} €
-            </Input>
-          );
-        })}
-      {hasDynamicInput && (
-        <Input
-          isActive={isDynamicInputActive}
-          onClick={() => {
-            dynamicInputRef?.current?.focus();
-          }}
-        >
-          <NumberInputField
-            type="number"
-            ref={dynamicInputRef}
-            step="1"
-            isActive={isDynamicInputActive}
-            onBlur={() => {
-              if (dynamicInputValue) {
-                setIsDynamicInputActive(true);
-                handleChange({
-                  type: "dynamic",
-                  value: Number(dynamicInputValue),
-                });
-              } else {
-                setIsDynamicInputActive(false);
-                handleChange(null);
-              }
-            }}
-            onFocus={() => setIsDynamicInputActive(true)}
-            value={dynamicInputValue}
-            onChange={(e: React.FormEvent<HTMLInputElement>) =>
-              setDynamicInputValue(e.currentTarget.value)
+    <Wrapper>
+      <StyledInputWrapper>
+        {options &&
+          options.length > 0 &&
+          options.map((o: OptionPrice, i) => {
+            if (o.type === "dynamic") {
+              return null;
             }
-          />
-          €
-        </Input>
-      )}
-    </StyledInputWrapper>
+
+            return (
+              <Input
+                key={i}
+                isActive={selected?.value === o.value && !isDynamicInputActive}
+                onClick={() => {
+                  if (isDynamicInputActive) {
+                    setIsDynamicInputActive(false);
+                  }
+                  handleChange(o);
+                }}
+              >
+                {o.value} €
+              </Input>
+            );
+          })}
+        {hasDynamicInput && (
+          <Input
+            isActive={isDynamicInputActive}
+            onClick={() => {
+              dynamicInputRef?.current?.focus();
+            }}
+          >
+            <NumberInputField
+              type="number"
+              ref={dynamicInputRef}
+              step="1"
+              isActive={isDynamicInputActive}
+              onBlur={() => {
+                if (dynamicInputValue) {
+                  setIsDynamicInputActive(true);
+                  handleChange({
+                    type: "dynamic",
+                    value: Number(dynamicInputValue),
+                  });
+                } else {
+                  setIsDynamicInputActive(false);
+                  handleChange(null);
+                }
+              }}
+              onFocus={() => setIsDynamicInputActive(true)}
+              value={dynamicInputValue}
+              onChange={(e: React.FormEvent<HTMLInputElement>) =>
+                setDynamicInputValue(e.currentTarget.value)
+              }
+            />
+            €
+          </Input>
+        )}
+      </StyledInputWrapper>
+      {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
+    </Wrapper>
   );
 };
 

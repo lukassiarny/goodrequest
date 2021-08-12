@@ -7,8 +7,15 @@ import SupportFormLayout, {
   ButtonsWrapper,
   InputSubtitleWrapper,
   InputWrapper,
-  Subtitle,
+  SubtitleH4,
 } from "../Layout";
+
+const regex = {
+  firstName: /^.{2,20}$/,
+  lastName: /^.{2,30}$/,
+  email: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+  phoneNumber: /^(\+42[01])(\s*\d){9}$/,
+};
 
 const SupportFormStepTwo: React.FC = () => {
   const [firstName, setFirstName] = React.useState("");
@@ -23,33 +30,43 @@ const SupportFormStepTwo: React.FC = () => {
 
   const history = useHistory();
 
-  const error = true;
-
-  const validation = () => {
+  const handleChangeNextStep = () => {
     setFirstNameError("");
     setLastNameError("");
     setEmailError("");
     setPhoneNumberError("");
 
-    if (error) {
+    let error = false;
+
+    if (firstName && !firstName.trim().match(regex.firstName)) {
       setFirstNameError("Vaše meno musí byť v rozmedzí 2-20 znakov");
+      error = true;
+    }
+
+    if (!lastName.trim().match(regex.lastName)) {
       setLastNameError(
         "Toto pole je povinné. Vaše priezvysko musí byť v rozmedzí 2-30 znakov"
       );
+      error = true;
+    }
+
+    if (email && !email.trim().match(regex.email)) {
       setEmailError("Váš e-mail musí mať platný formát. Napr. dog@goodboy.sk");
+      error = true;
+    }
+
+    if (phoneNumber && !phoneNumber.trim().match(regex.phoneNumber)) {
       setPhoneNumberError(
         "Zadajte slovenské alebo české telefónne číslo vo formáte +421/+420 xxx xxx xxx"
       );
+      error = true;
+    }
+
+    if (error) {
       return;
     }
 
     history.push("/zhrnutie-pomoci");
-  };
-
-  const regex = {
-    fistName: /^.{2,20}$/,
-    lastName: /^.{2,30}$/,
-    email: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
   };
 
   return (
@@ -58,7 +75,7 @@ const SupportFormStepTwo: React.FC = () => {
       currentStep={2}
     >
       <InputSubtitleWrapper>
-        <Subtitle>O vás</Subtitle>
+        <SubtitleH4>O vás</SubtitleH4>
         <InputWrapper>
           <InputText
             value={firstName}
@@ -98,7 +115,7 @@ const SupportFormStepTwo: React.FC = () => {
         </InputWrapper>
       </InputSubtitleWrapper>
       <ButtonsWrapper>
-        <Button text="Pokračovať" handleOnClick={validation} />
+        <Button text="Pokračovať" handleOnClick={handleChangeNextStep} />
         <Button
           text="Späť"
           buttonStyle="secondary"
