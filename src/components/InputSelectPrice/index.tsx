@@ -99,8 +99,12 @@ const Price: React.FC<Props> = ({
   hasDynamicInput = true,
   errorMsg,
 }) => {
-  const [dynamicInputValue, setDynamicInputValue] = React.useState("");
-  const [isDynamicInputActive, setIsDynamicInputActive] = React.useState(false);
+  const [dynamicInputValue, setDynamicInputValue] = React.useState(
+    selected?.type === "dynamic" ? selected?.value : ""
+  );
+  const [isDynamicInputActive, setIsDynamicInputActive] = React.useState(
+    selected?.type === "dynamic" ? true : false
+  );
   const dynamicInputRef = React.useRef<HTMLInputElement | null>(null);
 
   return (

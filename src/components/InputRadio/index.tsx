@@ -1,6 +1,7 @@
 import { rem } from "polished";
 import React from "react";
 import styled, { css } from "styled-components";
+import { TYPE_OF_SUPPORT } from "../../config";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -66,11 +67,6 @@ const Icon = styled.div`
   font-weight: 400;
 `;
 
-export const supportTypes: { 0: string; 1: string } = {
-  0: "Chcem finančne prispieť konkrétnemu útulku",
-  1: "Chcem finančne prispieť celej nadácii",
-};
-
 export type RadioOptions = 0 | 1;
 
 type Props = {
@@ -93,7 +89,7 @@ const RadioInput: React.FC<Props> = ({ active, handleChange }) => {
         <Icon>
           <i className="far fa-folder-open"></i>
         </Icon>
-        {supportTypes[0]}
+        {TYPE_OF_SUPPORT[0]}
       </Label>
       <Label isActive={active === 1}>
         <Input
@@ -107,7 +103,7 @@ const RadioInput: React.FC<Props> = ({ active, handleChange }) => {
         <Icon>
           <i className="fas fa-paw"></i>
         </Icon>
-        {supportTypes[1]}
+        {TYPE_OF_SUPPORT[1]}
       </Label>
     </Wrapper>
   );

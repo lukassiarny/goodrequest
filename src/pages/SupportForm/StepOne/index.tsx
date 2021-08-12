@@ -2,18 +2,28 @@ import { rem } from "polished";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { RootState } from "../../../app/store";
 import Button from "../../../components/Button";
 import InputRadio, { RadioOptions } from "../../../components/InputRadio";
 import InputSelect, { Option } from "../../../components/InputSelect";
 import InputSelectPrice, {
   OptionPrice,
 } from "../../../components/InputSelectPrice";
+import { SHELTER_DEFAULT_OPTION, PRICE_OPTIONS } from "../../../config";
 import SupportFormLayout, {
   SubtitleH3,
   InputWrapper,
   InputSubtitleWrapper,
   ButtonsWrapper,
 } from "../Layout";
+import { fieldSelector } from "../selectors";
+import {
+  setFieldError,
+  setTypeOfSupport,
+  setSelectedShelter,
+  setSelectedPrice,
+} from "../actions";
 
 const InpurRadioWrapper = styled.div`
   margin-bottom: ${rem(56)};
@@ -32,53 +42,51 @@ const NotRequied = styled.span`
   color: ${({ theme }) => theme.colors.textMiddle};
 `;
 
-const defaultOption = { label: "Vyberte útulok zo zoznamu", value: null };
-
-const optionsPrice: OptionPrice[] = [
-  { type: "static", value: 5 },
-  { type: "static", value: 10 },
-  { type: "static", value: 20 },
-  { type: "static", value: 30 },
-  { type: "static", value: 50 },
-  { type: "static", value: 100 },
-];
-
 const SupportFormStepOne: React.FC = () => {
-  const [selectedTypeOfSupport, setSelectedTypeOfSupport] =
-    React.useState<RadioOptions>(0);
+  const reduxShelter = useAppSelector((state: RootState) =>
+    fieldSelector(state, { fieldName: "shelter" })
+  );
 
-  const [selectedShelter, setSelectedShelter] =
-    React.useState<Option>(defaultOption);
-  const [shelteroOptions, setShelterOptions] = React.useState<Option[]>([
+  const reduxPrice = useAppSelector((state: RootState) =>
+    fieldSelector(state, { fieldName: "price" })
+  );
+
+  const reduxTypeOfSupport = useAppSelector((state: RootState) =>
+    fieldSelector(state, { fieldName: "typeOfSupport" })
+  );
+
+  const selectedTypeOfSupport: RadioOptions = reduxTypeOfSupport.value;
+  const selectedShelter: Option = reduxShelter.selected;
+  const selectedShelterError = reduxShelter.errorMsg;
+  const selectedPrice: OptionPrice = reduxPrice.selected;
+  const selectedPriceError = reduxPrice.errorMsg;
+
+  const [shelteroOptions, setShelterOptions] = React.useState<Option[] | []>([
     { label: "Selected value 1" },
     { label: "Selected value 2" },
     { label: "Selected value 3" },
   ]);
 
-  const [selectedShelterError, setSelectedShelterError] = React.useState("");
-
-  const [selectedPrice, setSelectedPrice] = React.useState<OptionPrice | null>(
-    optionsPrice[0]
-  );
-
-  const [selectedPriceError, setSelectedPriceError] = React.useState("");
-
   const history = useHistory();
 
+  const dispatch = useAppDispatch();
+
   const handleChangeNextPage = () => {
-    setSelectedShelterError("");
-    setSelectedPriceError("");
+    dispatch(setFieldError("shelter", ""));
+    dispatch(setFieldError("price", ""));
 
     let error = false;
 
     if (selectedTypeOfSupport === 0 && selectedShelter.value === null) {
       error = true;
-      setSelectedShelterError("Vyberte útulok, ktorému chcete pômocť.");
+      dispatch(
+        setFieldError("shelter", "Vyberte útulok, ktorému chcete pômocť.")
+      );
     }
 
     if (selectedPrice === null) {
       error = true;
-      setSelectedPriceError("Vyberte sumu, ktorou chcete prispieť");
+      dispatch(setFieldError("price", "Vyberte sumu, ktorou chcete prispieť"));
     }
 
     if (error) {
@@ -112,9 +120,9 @@ const SupportFormStepOne: React.FC = () => {
           active={selectedTypeOfSupport}
           handleChange={(active: RadioOptions) => {
             if (active === 1 && selectedShelterError) {
-              setSelectedShelterError("");
+              dispatch(setFieldError("shelter", ""));
             }
-            setSelectedTypeOfSupport(active);
+            dispatch(setTypeOfSupport(active));
           }}
         />
       </InpurRadioWrapper>
@@ -129,12 +137,12 @@ const SupportFormStepOne: React.FC = () => {
           <InputSelect
             selected={selectedShelter}
             options={shelteroOptions}
-            defaultOption={defaultOption}
+            defaultOption={SHELTER_DEFAULT_OPTION}
             handleChange={(option: Option) => {
               if (selectedShelterError) {
-                setSelectedShelterError("");
+                dispatch(setFieldError("shelter", ""));
               }
-              setSelectedShelter(option);
+              dispatch(setSelectedShelter(option));
             }}
             clearable={false}
             errorMsg={selectedShelterError}
@@ -146,12 +154,12 @@ const SupportFormStepOne: React.FC = () => {
         <InputWrapper>
           <InputSelectPrice
             selected={selectedPrice}
-            options={optionsPrice}
+            options={PRICE_OPTIONS}
             handleChange={(option: OptionPrice | null) => {
               if (selectedPriceError) {
-                setSelectedPriceError("");
+                dispatch(setFieldError("price", ""));
               }
-              setSelectedPrice(option);
+              dispatch(setSelectedPrice(option));
             }}
             errorMsg={selectedPriceError}
           />
