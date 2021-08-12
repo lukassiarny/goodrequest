@@ -30,7 +30,7 @@ const SupportFormStepTwo: React.FC = () => {
 
   const history = useHistory();
 
-  const handleChangeNextStep = () => {
+  const handleChangeNextPage = () => {
     setFirstNameError("");
     setLastNameError("");
     setEmailError("");
@@ -68,6 +68,24 @@ const SupportFormStepTwo: React.FC = () => {
 
     history.push("/zhrnutie-pomoci");
   };
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        handleChangeNextPage();
+      }
+
+      if (e.key === "ArrowLeft") {
+        history.push("/");
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown, false);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown, false);
+    };
+  });
 
   return (
     <SupportFormLayout
@@ -115,7 +133,7 @@ const SupportFormStepTwo: React.FC = () => {
         </InputWrapper>
       </InputSubtitleWrapper>
       <ButtonsWrapper>
-        <Button text="Pokračovať" handleOnClick={handleChangeNextStep} />
+        <Button text="Pokračovať" handleOnClick={handleChangeNextPage} />
         <Button
           text="Späť"
           buttonStyle="secondary"

@@ -1,8 +1,17 @@
 import { rem } from "polished";
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Steps from "../../components/Steps";
 import { Container } from "../../theme/layout";
+
+const opacityAnimation = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
 
 const StyledContainer = styled(Container)`
   display: flex;
@@ -16,6 +25,12 @@ const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+`;
+
+const InnerWrapper = styled.div`
+  width: 100%;
+  opacity: 0;
+  animation: 1000ms ${opacityAnimation} ease-in-out forwards;
 `;
 
 const FormTitle = styled.h1`
@@ -77,7 +92,7 @@ const SupportUsLayout: React.FC<Props> = ({
       <FormWrapper>
         <Steps currentStep={currentStep} />
         <FormTitle>{title}</FormTitle>
-        {children}
+        <InnerWrapper>{children}</InnerWrapper>
       </FormWrapper>
       <ImageWrapper>
         <img src="/assets/dogimage.jpg" alt="Nadácia Good boy" />

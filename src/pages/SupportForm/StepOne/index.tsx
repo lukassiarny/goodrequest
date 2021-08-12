@@ -3,7 +3,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../../../components/Button";
-import InputRadio, { TypeOfSupport } from "../../../components/InputRadio";
+import InputRadio, { RadioOptions } from "../../../components/InputRadio";
 import InputSelect, { Option } from "../../../components/InputSelect";
 import InputSelectPrice, {
   OptionPrice,
@@ -45,7 +45,7 @@ const optionsPrice: OptionPrice[] = [
 
 const SupportFormStepOne: React.FC = () => {
   const [selectedTypeOfSupport, setSelectedTypeOfSupport] =
-    React.useState<TypeOfSupport>(0);
+    React.useState<RadioOptions>(0);
 
   const [selectedShelter, setSelectedShelter] =
     React.useState<Option>(defaultOption);
@@ -88,6 +88,20 @@ const SupportFormStepOne: React.FC = () => {
     history.push("/vase-kontaktne-informacie");
   };
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        handleChangeNextPage();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown, false);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown, false);
+    };
+  });
+
   return (
     <SupportFormLayout
       title="Vyberte si možnosť, ako chcete pomôcť"
@@ -96,7 +110,7 @@ const SupportFormStepOne: React.FC = () => {
       <InpurRadioWrapper>
         <InputRadio
           active={selectedTypeOfSupport}
-          handleChange={(active: TypeOfSupport) => {
+          handleChange={(active: RadioOptions) => {
             if (active === 1 && selectedShelterError) {
               setSelectedShelterError("");
             }

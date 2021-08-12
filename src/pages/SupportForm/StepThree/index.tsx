@@ -28,6 +28,20 @@ const SupportFormStepThree: React.FC = () => {
 
   const handleSubmitForm = () => {};
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") {
+        history.push("/vase-kontaktne-informacie");
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown, false);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown, false);
+    };
+  });
+
   return (
     <SupportFormLayout title="Skontrolujte si zadané údaje" currentStep={3}>
       <InputSubtitleWrapper>

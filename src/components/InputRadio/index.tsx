@@ -66,11 +66,16 @@ const Icon = styled.div`
   font-weight: 400;
 `;
 
-export type TypeOfSupport = 0 | 1;
+export const supportTypes: { 0: string; 1: string } = {
+  0: "Chcem finančne prispieť konkrétnemu útulku",
+  1: "Chcem finančne prispieť celej nadácii",
+};
+
+export type RadioOptions = 0 | 1;
 
 type Props = {
-  active: TypeOfSupport;
-  handleChange: (active: TypeOfSupport) => void;
+  active: RadioOptions;
+  handleChange: (active: RadioOptions) => void;
 };
 
 const RadioInput: React.FC<Props> = ({ active, handleChange }) => {
@@ -88,7 +93,7 @@ const RadioInput: React.FC<Props> = ({ active, handleChange }) => {
         <Icon>
           <i className="far fa-folder-open"></i>
         </Icon>
-        Chcem finančne prispieť konkrétnemu útulku
+        {supportTypes[0]}
       </Label>
       <Label isActive={active === 1}>
         <Input
@@ -102,7 +107,7 @@ const RadioInput: React.FC<Props> = ({ active, handleChange }) => {
         <Icon>
           <i className="fas fa-paw"></i>
         </Icon>
-        Chcem finančne prispieť celej nadácii
+        {supportTypes[1]}
       </Label>
     </Wrapper>
   );

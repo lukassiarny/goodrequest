@@ -22,6 +22,7 @@ export const LayoutMainContent = styled.div`
 
 export const Header = styled.header`
   width: 100%;
+  padding-top: ${rem(40)}; //navbar height
 `;
 
 export const Main = styled.header`

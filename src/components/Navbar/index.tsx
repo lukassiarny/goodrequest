@@ -4,11 +4,18 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Container } from "../../theme/layout";
 
-const NavbarWrapper = styled.div`
+const NavbarWrapper = styled.div<{ isScrolled: boolean }>`
   width: 100%;
   height: ${rem(40)};
+  transition: transform 150ms ease-in-out;
+  transform: ${({ isScrolled }) =>
+    isScrolled ? `translateY(${rem(-40)})` : `translateY(0) `};
   box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.08);
   background: ${({ theme }) => theme.colors.navbarBackground};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 888;
 `;
 
 const StyledContainer = styled(Container)`
@@ -47,8 +54,25 @@ const SocialIcon = styled.a`
 `;
 
 const Navbar: React.FC = () => {
+  const [isScorlled, setIsScrolled] = React.useState(false);
+
+  React.useEffect(() => {
+    const isNavbrScrolled = () => {
+      if (window.scrollY >= 1) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", isNavbrScrolled);
+    return () => {
+      window.removeEventListener("scroll", isNavbrScrolled);
+    };
+  }, []);
+
   return (
-    <NavbarWrapper>
+    <NavbarWrapper isScrolled={isScorlled}>
       <StyledContainer>
         <TitleLink to="/">Nadácia Good Boy</TitleLink>
         <IconsWrapper>
