@@ -39,7 +39,13 @@ export const Subtitle = styled.h3`
 `;
 
 export const InputWrapper = styled.div`
+  width: 100%;
   margin-top: ${rem(16)};
+`;
+
+export const InputSubtitleWrapper = styled.div`
+  margin-bottom: ${rem(40)};
+  width: 100%;
 `;
 
 export const ButtonsWrapper = styled.div`

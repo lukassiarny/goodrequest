@@ -28,7 +28,7 @@ const App: React.FC = () => {
             <Route exact path="/vase-kontaktne-informacie">
               <SupportFormStepTwo />
             </Route>
-            <Route exact path="/zhrnutie">
+            <Route exact path="/zhrnutie-pomoci">
               <SupportFormStepThree />
             </Route>
           </Switch>

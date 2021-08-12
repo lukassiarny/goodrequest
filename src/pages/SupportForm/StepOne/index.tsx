@@ -11,16 +11,12 @@ import InputSelectPrice, {
 import SupportFormLayout, {
   Subtitle,
   InputWrapper,
+  InputSubtitleWrapper,
   ButtonsWrapper,
 } from "../Layout";
 
 const InpurRadioWrapper = styled.div`
   margin-bottom: ${rem(56)};
-`;
-
-const InputSubtitleWrapper = styled.div`
-  margin-bottom: ${rem(40)};
-  width: 100%;
 `;
 
 const SubtitleAboutWrapper = styled.div`

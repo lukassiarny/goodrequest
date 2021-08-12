@@ -11,6 +11,7 @@ export const theme = {
     mainBackground: "#fff",
     navbarBackground: "#FEFEFE",
     borderColor: "#DFDFDF",
+    error: "red",
   },
   font: {
     familyPrimary: "'Public Sans', sans-serif",
