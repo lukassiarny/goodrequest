@@ -18,12 +18,7 @@ import SupportFormLayout, {
   ButtonsWrapper,
 } from "../Layout";
 import { fieldSelector } from "../selectors";
-import {
-  setFieldError,
-  setTypeOfSupport,
-  setSelectedShelter,
-  setSelectedPrice,
-} from "../actions";
+import { setFieldError, setFieldValue } from "../actions";
 
 const InpurRadioWrapper = styled.div`
   margin-bottom: ${rem(56)};
@@ -55,11 +50,11 @@ const SupportFormStepOne: React.FC = () => {
     fieldSelector(state, { fieldName: "typeOfSupport" })
   );
 
-  const selectedTypeOfSupport: RadioOptions = reduxTypeOfSupport.value;
-  const selectedShelter: Option = reduxShelter.selected;
-  const selectedShelterError = reduxShelter.errorMsg;
-  const selectedPrice: OptionPrice = reduxPrice.selected;
-  const selectedPriceError = reduxPrice.errorMsg;
+  const typeOfSupportValue: RadioOptions = reduxTypeOfSupport.value;
+  const shelterValue: Option = reduxShelter.value;
+  const shelterError = reduxShelter.errorMsg;
+  const priceValue: OptionPrice = reduxPrice.value;
+  const priceError = reduxPrice.errorMsg;
 
   const [shelteroOptions, setShelterOptions] = React.useState<Option[] | []>([
     { label: "Selected value 1" },
@@ -67,20 +62,33 @@ const SupportFormStepOne: React.FC = () => {
     { label: "Selected value 3" },
   ]);
 
+  React.useEffect(() => {
+    (async () => {
+      const res = await fetch(
+        "https://frontend-assignment-api.goodrequest.com/api/v1/shelters"
+      );
+      const { shelters } = await res.json();
+      const mappedShelters = shelters.map((s: any) => {
+        return { label: s.name, value: s.id };
+      });
+      setShelterOptions(mappedShelters);
+    })();
+  }, []);
+
   const history = useHistory();
 
   const dispatch = useAppDispatch();
 
   const handleChangePage = () => {
     if (
-      selectedShelterError &&
-      selectedTypeOfSupport === 0 &&
-      !(selectedShelter === SHELTER_DEFAULT_OPTION)
+      shelterError &&
+      typeOfSupportValue === 0 &&
+      !(shelterValue === SHELTER_DEFAULT_OPTION)
     ) {
       dispatch(setFieldError("shelter", ""));
     }
 
-    if (selectedPriceError && selectedPrice !== null) {
+    if (priceError && priceValue !== null) {
       dispatch(setFieldError("price", ""));
     }
 
@@ -108,12 +116,12 @@ const SupportFormStepOne: React.FC = () => {
     >
       <InpurRadioWrapper>
         <InputRadio
-          active={selectedTypeOfSupport}
+          active={typeOfSupportValue}
           handleChange={(active: RadioOptions) => {
-            if (active === 1 && selectedShelterError) {
+            if (active === 1 && shelterError) {
               dispatch(setFieldError("shelter", ""));
             }
-            dispatch(setTypeOfSupport(active));
+            dispatch(setFieldValue("typeOfSupport", active));
           }}
         />
       </InpurRadioWrapper>
@@ -121,22 +129,21 @@ const SupportFormStepOne: React.FC = () => {
         <SubtitleAboutWrapper>
           <SubtitleH3>O projekte</SubtitleH3>
           <NotRequied>
-            {selectedTypeOfSupport === 0 ? "Povinné" : "Nepovinné"}
+            {typeOfSupportValue === 0 ? "Povinné" : "Nepovinné"}
           </NotRequied>
         </SubtitleAboutWrapper>
         <InputWrapper>
           <InputSelect
-            selected={selectedShelter}
+            selected={shelterValue}
             options={shelteroOptions}
             defaultOption={SHELTER_DEFAULT_OPTION}
             handleChange={(option: Option) => {
-              if (selectedShelterError) {
+              if (shelterError) {
                 dispatch(setFieldError("shelter", ""));
               }
-              dispatch(setSelectedShelter(option));
+              dispatch(setFieldValue("shelter", option));
             }}
-            clearable={false}
-            errorMsg={selectedShelterError}
+            errorMsg={shelterError}
           />
         </InputWrapper>
       </InputSubtitleWrapper>
@@ -144,15 +151,15 @@ const SupportFormStepOne: React.FC = () => {
         <SubtitleH3>Suma, ktorou chcem prispieť</SubtitleH3>
         <InputWrapper>
           <InputSelectPrice
-            selected={selectedPrice}
+            selected={priceValue}
             options={PRICE_OPTIONS}
             handleChange={(option: OptionPrice | null) => {
-              if (selectedPriceError) {
+              if (priceError) {
                 dispatch(setFieldError("price", ""));
               }
-              dispatch(setSelectedPrice(option));
+              dispatch(setFieldValue("price", option));
             }}
-            errorMsg={selectedPriceError}
+            errorMsg={priceError}
           />
         </InputWrapper>
       </InputSubtitleWrapper>

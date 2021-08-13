@@ -100,7 +100,7 @@ const TextInput: React.FC<Props> = ({
     <InputWrapper>
       <Label htmlFor={label}>{label}</Label>
       {inputType === "phone" && (
-        <Flag src={`/assets/${getFlag(value)}.svg`} alt="" />
+        <Flag src={`/assets/${getFlag(inputValue)}.svg`} alt="" />
       )}
       <Input
         name={label}

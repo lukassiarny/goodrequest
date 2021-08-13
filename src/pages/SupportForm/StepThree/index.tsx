@@ -4,12 +4,13 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import Button from "../../../components/Button";
+import InputCheckbox from "../../../components/CheckBox";
 import {
   REGEX,
   SHELTER_DEFAULT_OPTION,
   TYPE_OF_SUPPORT,
 } from "../../../config";
-import { setFieldError } from "../actions";
+import { setFieldError, setFieldValue } from "../actions";
 import SupportFormLayout, {
   ButtonsWrapper,
   InputSubtitleWrapper,
@@ -32,6 +33,10 @@ const Text = styled.span<{ error?: boolean }>`
   color: ${({ error, theme }) => (error ? theme.colors.error : "inherit")};
 `;
 
+const CheckboxWrapper = styled.div`
+  margin-top: ${rem(48)};
+`;
+
 const getFullName = (firstName: string, lastName: string) => {
   return !firstName && !lastName
     ? "-"
@@ -47,15 +52,17 @@ const SupportFormStepThree: React.FC = () => {
     lastName,
     email,
     phoneNumber,
+    confirmation,
   } = useAppSelector(formSelector);
 
   const selectedTypeOfSupport = typeOfSupport.value;
-  const selectedShelter = shelter.selected;
-  const selectedPrice = price.selected;
+  const selectedShelter = shelter.value;
+  const selectedPrice = price.value;
   const firstNameValue = firstName.value;
   const lastNameValue = lastName.value;
   const emailValue = email.value;
   const phoneNumberValue = phoneNumber.value;
+  const confirmationValue = confirmation.value;
 
   const selectedShelterError = shelter.errorMsg;
   const selectedPriceError = price.errorMsg;
@@ -63,6 +70,7 @@ const SupportFormStepThree: React.FC = () => {
   const lastNameError = lastName.errorMsg;
   const emailError = email.errorMsg;
   const phoneNumberError = phoneNumber.errorMsg;
+  const confirmationError = confirmation.errorMsg;
 
   const isAnyError =
     !!phoneNumberError ||
@@ -70,37 +78,14 @@ const SupportFormStepThree: React.FC = () => {
     !!lastNameError ||
     !!firstNameError ||
     !!selectedPriceError ||
-    !!selectedShelterError;
+    !!selectedShelterError ||
+    !!confirmationError;
 
   const history = useHistory();
 
   const dispatch = useAppDispatch();
 
   const handleSubmitForm = () => {
-    if (selectedShelterError) {
-      dispatch(setFieldError("shelter", ""));
-    }
-
-    if (selectedPriceError) {
-      dispatch(setFieldError("price", ""));
-    }
-
-    if (firstNameError) {
-      dispatch(setFieldError("firstName", ""));
-    }
-
-    if (lastNameError) {
-      dispatch(setFieldError("lastName", ""));
-    }
-
-    if (emailError) {
-      dispatch(setFieldError("email", ""));
-    }
-
-    if (phoneNumberError) {
-      dispatch(setFieldError("phoneNumber", ""));
-    }
-
     let error = false;
 
     if (
@@ -118,7 +103,6 @@ const SupportFormStepThree: React.FC = () => {
       dispatch(setFieldError("price", "Vyberte sumu, ktorou chcete prispieť"));
     }
 
-    // check and set errors
     if (firstNameValue && !firstNameValue.trim().match(REGEX.firstName)) {
       dispatch(
         setFieldError("firstName", "Vaše meno musí byť v rozmedzí 2-20 znakov")
@@ -151,6 +135,17 @@ const SupportFormStepThree: React.FC = () => {
         setFieldError(
           "phoneNumber",
           "Zadajte slovenské alebo české telefónne číslo vo formáte +421/+420 xxx xxx xxx"
+        )
+      );
+
+      error = true;
+    }
+
+    if (!confirmationValue) {
+      dispatch(
+        setFieldError(
+          "confirmation",
+          "Musíte súhlasiť so spracovaním osobných údajov"
         )
       );
 
@@ -225,6 +220,20 @@ const SupportFormStepThree: React.FC = () => {
             </Text>
           </SummaryListItem>
         </SummaryList>
+        <CheckboxWrapper>
+          <InputCheckbox
+            label="Súhlasím so spracovaním mojich osobných údajov"
+            value={confirmationValue}
+            onValueChange={() => {
+              if (confirmationError) {
+                dispatch(setFieldError("confirmation", ""));
+              }
+
+              dispatch(setFieldValue("confirmation", !confirmationValue));
+            }}
+            errorMsg={confirmationError}
+          />
+        </CheckboxWrapper>
       </InputSubtitleWrapper>
       <ButtonsWrapper>
         <Button

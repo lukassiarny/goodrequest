@@ -123,7 +123,7 @@ const SupportFormStepTwo: React.FC = () => {
         <InputWrapper>
           <InputText
             value={email}
-            label="Meno"
+            label="E-mailová adresa"
             placeholder="Zadajte Váš e-mail"
             handleBlur={(value: string) =>
               dispatch(setFieldValue("email", value))

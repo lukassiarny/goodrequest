@@ -1,21 +1,21 @@
 import { Option } from "../../components/InputSelect";
 import { OptionPrice } from "../../components/InputSelectPrice";
-import { FieldNamesError, FieldNamesValue } from "./formReducer";
+import { FieldNames } from "./formReducer";
 
-export const setFieldValue = (fieldName: FieldNamesValue, value: string) => ({
+export const setFieldValue = (
+  fieldName: FieldNames,
+  value: string | number | boolean | Option | OptionPrice | null
+) => ({
   type: "SET_FIELD_VALUE",
   payload: { value, fieldName },
 });
 
-export const setFieldError = (
-  fieldName: FieldNamesError,
-  errorMsg: string
-) => ({
+export const setFieldError = (fieldName: FieldNames, errorMsg: string) => ({
   type: "SET_ERROR_MSG",
   payload: { fieldName, errorMsg },
 });
 
-export const setTypeOfSupport = (value: number) => ({
+/*export const setTypeOfSupport = (value: number) => ({
   type: "SET_TYPE_OF_SUPPORT",
   payload: value,
 });
@@ -30,7 +30,7 @@ export const setSelectedPrice = (selectedOption: OptionPrice | null) => ({
   payload: selectedOption,
 });
 
-export const setConfirmation = (checked: boolean) => ({
+export const setConfirmation = (value: boolean) => ({
   type: "SET_CONFIRMATION",
-  payload: checked,
-});
+  payload: value,
+});*/

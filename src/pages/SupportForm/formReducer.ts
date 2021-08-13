@@ -1,6 +1,6 @@
 import { PRICE_OPTIONS, SHELTER_DEFAULT_OPTION } from "../../config";
 
-export type FieldNamesValue =
+/*export type FieldNamesValue =
   | "firstName"
   | "lastName"
   | "email"
@@ -12,7 +12,8 @@ export type FieldNamesError =
   | "email"
   | "phoneNumber"
   | "price"
-  | "shelter";
+  | "shelter"
+  | "confirmation";*/
 
 export type FieldNames =
   | "typeOfSupport"
@@ -21,18 +22,20 @@ export type FieldNames =
   | "email"
   | "phoneNumber"
   | "price"
-  | "shelter";
+  | "shelter"
+  | "confirmation";
 
 const initialState = {
   typeOfSupport: {
     value: 0,
+    errorMsg: "",
   },
   shelter: {
-    selected: SHELTER_DEFAULT_OPTION,
+    value: SHELTER_DEFAULT_OPTION,
     errorMsg: "",
   },
   price: {
-    selected: PRICE_OPTIONS[0],
+    value: PRICE_OPTIONS[0],
     errorMsg: "",
   },
   firstName: {
@@ -51,7 +54,10 @@ const initialState = {
     value: "",
     errorMsg: "",
   },
-  confirmation: false,
+  confirmation: {
+    value: false,
+    errorMsg: "",
+  },
 };
 
 type FormState = typeof initialState;
@@ -72,7 +78,7 @@ const formReducer = (state: FormState = initialState, action: any) => {
         [fieldName]: { ...(state as any)[fieldName], errorMsg },
       };
     }
-    case "SET_TYPE_OF_SUPPORT": {
+    /*case "SET_TYPE_OF_SUPPORT": {
       return {
         ...state,
         typeOfSupport: { ...state.typeOfSupport, value: action.payload },
@@ -93,9 +99,9 @@ const formReducer = (state: FormState = initialState, action: any) => {
     case "SET_CONFIRMATION": {
       return {
         ...state,
-        confirmation: action.payload,
+        confirmation: { ...state.confirmation, value: action.payload },
       };
-    }
+    }*/
     default:
       return state;
   }
