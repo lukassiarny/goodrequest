@@ -2,7 +2,7 @@ import { rem } from "polished";
 import React from "react";
 import styled, { css } from "styled-components";
 
-type ButtonStyle = "primary" | "secondary";
+type ButtonStyle = "primary" | "secondary" | "fulfilled";
 
 type Props = {
   buttonStyle?: ButtonStyle;
@@ -49,6 +49,16 @@ const Button = styled.button<{ buttonStyle: ButtonStyle; disabled: boolean }>`
     css`
       background: ${theme.colors.primaryLight};
       color: ${theme.colors.textPrimary};
+    `}
+
+    ${({ buttonStyle, theme }) =>
+    buttonStyle === "fulfilled" &&
+    css`
+      background: ${({ theme }) =>
+        `linear-gradient(115.41deg, ${theme.colors.primaryOne} -1.77%, ${theme.colors.primaryTwo} 73.03%)`};
+      color: #fff;
+      padding: 0 ${rem(48)};
+      height: ${rem(72)};
     `}
 
   &:after {

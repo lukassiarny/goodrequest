@@ -1,20 +1,5 @@
 import { PRICE_OPTIONS, SHELTER_DEFAULT_OPTION } from "../../config";
 
-/*export type FieldNamesValue =
-  | "firstName"
-  | "lastName"
-  | "email"
-  | "phoneNumber";
-
-export type FieldNamesError =
-  | "firstName"
-  | "lastName"
-  | "email"
-  | "phoneNumber"
-  | "price"
-  | "shelter"
-  | "confirmation";*/
-
 export type FieldNames =
   | "typeOfSupport"
   | "firstName"
@@ -78,30 +63,9 @@ const formReducer = (state: FormState = initialState, action: any) => {
         [fieldName]: { ...(state as any)[fieldName], errorMsg },
       };
     }
-    /*case "SET_TYPE_OF_SUPPORT": {
-      return {
-        ...state,
-        typeOfSupport: { ...state.typeOfSupport, value: action.payload },
-      };
+    case "RESET_FORM": {
+      return initialState;
     }
-    case "SET_SELECTED_SHELTER": {
-      return {
-        ...state,
-        shelter: { ...state.shelter, selected: action.payload },
-      };
-    }
-    case "SET_SELECTED_PRICE": {
-      return {
-        ...state,
-        price: { ...state.price, selected: action.payload },
-      };
-    }
-    case "SET_CONFIRMATION": {
-      return {
-        ...state,
-        confirmation: { ...state.confirmation, value: action.payload },
-      };
-    }*/
     default:
       return state;
   }

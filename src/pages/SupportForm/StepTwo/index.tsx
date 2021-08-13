@@ -89,7 +89,8 @@ const SupportFormStepTwo: React.FC = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown, false);
     };
-  });
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <SupportFormLayout

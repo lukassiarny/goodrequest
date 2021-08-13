@@ -146,7 +146,8 @@ const SelectMenu: React.FC<Props> = ({
       document.removeEventListener("keydown", handleKeyDown, false);
       document.removeEventListener("click", handleClickOutside);
     };
-  });
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <SelectWrapper ref={wrapperEl}>

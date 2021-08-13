@@ -15,22 +15,6 @@ export const setFieldError = (fieldName: FieldNames, errorMsg: string) => ({
   payload: { fieldName, errorMsg },
 });
 
-/*export const setTypeOfSupport = (value: number) => ({
-  type: "SET_TYPE_OF_SUPPORT",
-  payload: value,
+export const resetForm = () => ({
+  type: "RESET_FORM",
 });
-
-export const setSelectedShelter = (selectedOption: Option) => ({
-  type: "SET_SELECTED_SHELTER",
-  payload: selectedOption,
-});
-
-export const setSelectedPrice = (selectedOption: OptionPrice | null) => ({
-  type: "SET_SELECTED_PRICE",
-  payload: selectedOption,
-});
-
-export const setConfirmation = (value: boolean) => ({
-  type: "SET_CONFIRMATION",
-  payload: value,
-});*/

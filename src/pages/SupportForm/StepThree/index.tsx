@@ -10,37 +10,36 @@ import {
   SHELTER_DEFAULT_OPTION,
   TYPE_OF_SUPPORT,
 } from "../../../config";
-import { setFieldError, setFieldValue } from "../actions";
+import { resetForm, setFieldError, setFieldValue } from "../actions";
 import SupportFormLayout, {
   ButtonsWrapper,
   InputSubtitleWrapper,
-  SubtitleH4,
 } from "../Layout";
 import { formSelector } from "../selectors";
-
-const SummaryList = styled.ul``;
-
-const SummaryListItem = styled.li`
-  &:not(:last-of-type) {
-    margin-bottom: ${rem(24)};
-  }
-`;
-
-const Text = styled.span<{ error?: boolean }>`
-  margin-top: ${rem(8)};
-  display: inline-block;
-  line-height: ${rem(19)};
-  color: ${({ error, theme }) => (error ? theme.colors.error : "inherit")};
-`;
+import SummaryList from "./SummaryList";
+import SummaryListItem from "./SummaryList/SummaryListItem";
 
 const CheckboxWrapper = styled.div`
   margin-top: ${rem(48)};
 `;
 
+const FulfilledWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const getFullName = (firstName: string, lastName: string) => {
-  return !firstName && !lastName
-    ? "-"
-    : `${firstName ? firstName + " " : ""} ${lastName ? lastName : ""}`;
+  return !firstName && !lastName ? "-" : `${firstName || ""} ${lastName || ""}`;
+};
+
+type Contribution = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  value: number;
+  phone?: string;
+  shelterID?: number;
 };
 
 const SupportFormStepThree: React.FC = () => {
@@ -72,6 +71,10 @@ const SupportFormStepThree: React.FC = () => {
   const phoneNumberError = phoneNumber.errorMsg;
   const confirmationError = confirmation.errorMsg;
 
+  const [status, setStatus] = React.useState<
+    "idle" | "loading" | "fulfilled" | "error"
+  >("idle");
+
   const isAnyError =
     !!phoneNumberError ||
     !!emailError ||
@@ -85,7 +88,7 @@ const SupportFormStepThree: React.FC = () => {
 
   const dispatch = useAppDispatch();
 
-  const handleSubmitForm = () => {
+  const handleSubmitForm = async () => {
     let error = false;
 
     if (
@@ -155,6 +158,38 @@ const SupportFormStepThree: React.FC = () => {
     if (error) {
       return;
     }
+
+    setStatus("loading");
+
+    try {
+      const o: Contribution = {
+        firstName: firstNameValue,
+        lastName: lastNameValue,
+        email: emailValue,
+        phone: phoneNumberValue,
+        value: selectedPrice.value,
+      };
+
+      if (selectedShelter.value) {
+        o.shelterID = selectedShelter.value;
+      }
+
+      if (phoneNumberValue) {
+        o.phone = phoneNumberValue;
+      }
+
+      await fetch(
+        "https://frontend-assignment-api.goodrequest.com/api/v1/shelters/contribute",
+        {
+          method: "POST",
+          body: JSON.stringify(o),
+        }
+      );
+
+      setStatus("fulfilled");
+    } catch {
+      setStatus("error");
+    }
   };
 
   React.useEffect(() => {
@@ -169,86 +204,123 @@ const SupportFormStepThree: React.FC = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown, false);
     };
-  });
+    // eslint-disable-next-line
+  }, []);
 
-  return (
-    <SupportFormLayout title="Skontrolujte si zadané údaje" currentStep={3}>
-      <InputSubtitleWrapper>
-        <SummaryList>
-          <SummaryListItem>
-            <SubtitleH4>Akou formou chcem pomôcť</SubtitleH4>
-            <Text>{(TYPE_OF_SUPPORT as any)[typeOfSupport.value]}</Text>
-          </SummaryListItem>
-          <SummaryListItem>
-            <SubtitleH4>Najviac mi záleží na útulku</SubtitleH4>
-            <Text error={!!selectedShelterError}>
-              {selectedShelterError
-                ? selectedShelterError
-                : selectedShelter === SHELTER_DEFAULT_OPTION
-                ? "Nebol vybraný žiadny konkrétny útulok"
-                : selectedShelter.label}
-            </Text>
-          </SummaryListItem>
-          <SummaryListItem>
-            <SubtitleH4>Suma ktorou chcem pomôcť</SubtitleH4>
-            <Text error={!!selectedPriceError}>
-              {selectedPriceError ? selectedPriceError : selectedPrice.value} €
-            </Text>
-          </SummaryListItem>
-          <SummaryListItem>
-            <SubtitleH4>Meno a priezvisko</SubtitleH4>
-            <Text error={!!firstNameError || !!lastNameError}>
-              {firstNameError || lastNameError
-                ? "Priezvysko je povinné pole a musí byť v rozmedzí 2-30 znakov. Krstné meno musí byť v rozmedzí 2-20 znakov."
-                : getFullName(firstNameValue, lastNameValue)}
-            </Text>
-          </SummaryListItem>
-          <SummaryListItem>
-            <SubtitleH4>E-mailová adresa</SubtitleH4>
-            <Text error={!!emailError}>
-              {emailError ? emailError : emailValue ? emailValue : "-"}
-            </Text>
-          </SummaryListItem>
-          <SummaryListItem>
-            <SubtitleH4>Telefónne číslo</SubtitleH4>
-            <Text error={!!phoneNumberError}>
-              {phoneNumberError
-                ? phoneNumberError
-                : phoneNumberValue
-                ? phoneNumberValue
-                : "-"}
-            </Text>
-          </SummaryListItem>
-        </SummaryList>
-        <CheckboxWrapper>
-          <InputCheckbox
-            label="Súhlasím so spracovaním mojich osobných údajov"
-            value={confirmationValue}
-            onValueChange={() => {
-              if (confirmationError) {
-                dispatch(setFieldError("confirmation", ""));
-              }
+  let content;
 
-              dispatch(setFieldValue("confirmation", !confirmationValue));
-            }}
-            errorMsg={confirmationError}
-          />
-        </CheckboxWrapper>
-      </InputSubtitleWrapper>
-      <ButtonsWrapper>
-        <Button
-          text="Odoslať formulár"
-          handleOnClick={handleSubmitForm}
-          disabled={isAnyError}
-        />
-        <Button
-          text="Späť"
-          buttonStyle="secondary"
-          handleOnClick={() => history.push("/vase-kontaktne-informacie")}
-        />
-      </ButtonsWrapper>
-    </SupportFormLayout>
-  );
+  switch (status) {
+    case "fulfilled": {
+      content = (
+        <SupportFormLayout
+          title="Ďakujeme za Vašu pomoc. Vaše peniaze budú použité na dobrú vec!"
+          currentStep={3}
+        >
+          <FulfilledWrapper>
+            <Button
+              text="Chcem prispieť viac"
+              handleOnClick={() => {
+                dispatch(resetForm());
+                history.push("/");
+              }}
+              buttonStyle="fulfilled"
+            />
+          </FulfilledWrapper>
+        </SupportFormLayout>
+      );
+      break;
+    }
+    case "error": {
+      content = (
+        <SupportFormLayout
+          title="Chyba! Pri odosielaní sa niečo pokazilo. Skúste to neskôr prosím..."
+          currentStep={3}
+        ></SupportFormLayout>
+      );
+      break;
+    }
+    default: {
+      content = (
+        <SupportFormLayout title="Skontrolujte si zadané údaje" currentStep={3}>
+          <InputSubtitleWrapper>
+            <SummaryList>
+              <SummaryListItem title="Akou formou chcem pomôcť">
+                {(TYPE_OF_SUPPORT as any)[typeOfSupport.value]}
+              </SummaryListItem>
+              <SummaryListItem
+                title="Najviac mi záleží na útulku"
+                error={!!selectedShelterError}
+              >
+                {selectedShelterError
+                  ? selectedShelterError
+                  : selectedShelter === SHELTER_DEFAULT_OPTION
+                  ? "Nebol vybraný žiadny konkrétny útulok"
+                  : selectedShelter.label}
+              </SummaryListItem>
+              <SummaryListItem
+                title="Suma ktorou chcem pomôcť"
+                error={!!selectedPriceError}
+              >
+                {selectedPriceError ? selectedPriceError : selectedPrice.value}{" "}
+                €
+              </SummaryListItem>
+              <SummaryListItem
+                title="Meno a priezvisko"
+                error={!!firstNameError || !!lastNameError}
+              >
+                {firstNameError || lastNameError
+                  ? "Priezvysko je povinné pole a musí byť v rozmedzí 2-30 znakov. Krstné meno musí byť v rozmedzí 2-20 znakov."
+                  : getFullName(firstNameValue, lastNameValue)}
+              </SummaryListItem>
+              <SummaryListItem title="E-mailová adresa" error={!!emailError}>
+                {emailError ? emailError : emailValue ? emailValue : "-"}
+              </SummaryListItem>
+              <SummaryListItem
+                title="Telefónne číslo"
+                error={!!phoneNumberError}
+              >
+                {phoneNumberError
+                  ? phoneNumberError
+                  : phoneNumberValue
+                  ? phoneNumberValue
+                  : "-"}
+              </SummaryListItem>
+            </SummaryList>
+            <CheckboxWrapper>
+              <InputCheckbox
+                label="Súhlasím so spracovaním mojich osobných údajov"
+                value={confirmationValue}
+                onValueChange={() => {
+                  if (confirmationError) {
+                    dispatch(setFieldError("confirmation", ""));
+                  }
+
+                  dispatch(setFieldValue("confirmation", !confirmationValue));
+                }}
+                errorMsg={confirmationError}
+              />
+            </CheckboxWrapper>
+          </InputSubtitleWrapper>
+          <ButtonsWrapper>
+            <Button
+              text="Odoslať formulár"
+              isLoading={status === "loading"}
+              handleOnClick={handleSubmitForm}
+              disabled={isAnyError}
+            />
+            <Button
+              text="Späť"
+              isLoading={status === "loading"}
+              buttonStyle="secondary"
+              handleOnClick={() => history.push("/vase-kontaktne-informacie")}
+            />
+          </ButtonsWrapper>
+        </SupportFormLayout>
+      );
+    }
+  }
+
+  return <>{content}</>;
 };
 
 export default SupportFormStepThree;

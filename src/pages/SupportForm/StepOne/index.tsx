@@ -64,14 +64,18 @@ const SupportFormStepOne: React.FC = () => {
 
   React.useEffect(() => {
     (async () => {
-      const res = await fetch(
-        "https://frontend-assignment-api.goodrequest.com/api/v1/shelters"
-      );
-      const { shelters } = await res.json();
-      const mappedShelters = shelters.map((s: any) => {
-        return { label: s.name, value: s.id };
-      });
-      setShelterOptions(mappedShelters);
+      try {
+        const res = await fetch(
+          "https://frontend-assignment-api.goodrequest.com/api/v1/shelters"
+        );
+        const { shelters } = await res.json();
+        const mappedShelters = shelters.map((s: any) => {
+          return { label: s.name, value: s.id };
+        });
+        setShelterOptions(mappedShelters);
+      } catch (err) {
+        console.log(err);
+      }
     })();
   }, []);
 
@@ -107,7 +111,8 @@ const SupportFormStepOne: React.FC = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown, false);
     };
-  });
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <SupportFormLayout
