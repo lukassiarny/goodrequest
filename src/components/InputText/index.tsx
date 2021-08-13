@@ -8,7 +8,7 @@ type Props = {
   inputType?: "text" | "phone";
   value: string;
   errorMsg?: string;
-  onValueChange: (value: string) => void;
+  handleBlur: (value: string) => void;
 };
 
 const InputWrapper = styled.div`
@@ -91,9 +91,11 @@ const TextInput: React.FC<Props> = ({
   inputType = "text",
   placeholder = "Vyplnte pole prosím...",
   value,
-  onValueChange,
+  handleBlur,
   errorMsg,
 }) => {
+  const [inputValue, setInputValue] = React.useState(value);
+
   return (
     <InputWrapper>
       <Label htmlFor={label}>{label}</Label>
@@ -105,11 +107,12 @@ const TextInput: React.FC<Props> = ({
         error={!!errorMsg}
         inputType={inputType}
         type="text"
-        value={value}
+        value={inputValue}
         placeholder={placeholder}
         onChange={(e: React.FormEvent<HTMLInputElement>) =>
-          onValueChange(e.currentTarget.value)
+          setInputValue(e.currentTarget.value)
         }
+        onBlur={() => handleBlur(inputValue)}
       />
       {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
     </InputWrapper>

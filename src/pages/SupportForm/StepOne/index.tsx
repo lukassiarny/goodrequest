@@ -71,26 +71,17 @@ const SupportFormStepOne: React.FC = () => {
 
   const dispatch = useAppDispatch();
 
-  const handleChangeNextPage = () => {
-    dispatch(setFieldError("shelter", ""));
-    dispatch(setFieldError("price", ""));
-
-    let error = false;
-
-    if (selectedTypeOfSupport === 0 && selectedShelter.value === null) {
-      error = true;
-      dispatch(
-        setFieldError("shelter", "Vyberte útulok, ktorému chcete pômocť.")
-      );
+  const handleChangePage = () => {
+    if (
+      selectedShelterError &&
+      selectedTypeOfSupport === 0 &&
+      !(selectedShelter === SHELTER_DEFAULT_OPTION)
+    ) {
+      dispatch(setFieldError("shelter", ""));
     }
 
-    if (selectedPrice === null) {
-      error = true;
-      dispatch(setFieldError("price", "Vyberte sumu, ktorou chcete prispieť"));
-    }
-
-    if (error) {
-      return;
+    if (selectedPriceError && selectedPrice !== null) {
+      dispatch(setFieldError("price", ""));
     }
 
     history.push("/vase-kontaktne-informacie");
@@ -99,7 +90,7 @@ const SupportFormStepOne: React.FC = () => {
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") {
-        handleChangeNextPage();
+        handleChangePage();
       }
     };
 
@@ -166,7 +157,7 @@ const SupportFormStepOne: React.FC = () => {
         </InputWrapper>
       </InputSubtitleWrapper>
       <ButtonsWrapper>
-        <Button text="Pokračovať" handleOnClick={handleChangeNextPage} />
+        <Button text="Pokračovať" handleOnClick={handleChangePage} />
       </ButtonsWrapper>
     </SupportFormLayout>
   );

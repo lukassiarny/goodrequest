@@ -1,81 +1,86 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { RootState } from "../../../app/store";
 import Button from "../../../components/Button";
 import InputText from "../../../components/InputText";
+import { setFieldError, setFieldValue } from "../actions";
 import SupportFormLayout, {
   ButtonsWrapper,
   InputSubtitleWrapper,
   InputWrapper,
   SubtitleH4,
 } from "../Layout";
-
-const regex = {
-  firstName: /^.{2,20}$/,
-  lastName: /^.{2,30}$/,
-  email: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-  phoneNumber: /^(\+42[01])(\s*\d){9}$/,
-};
+import { fieldSelector } from "../selectors";
+import { REGEX } from "../../../config";
 
 const SupportFormStepTwo: React.FC = () => {
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phoneNumber, setPhoneNumber] = React.useState("");
+  const reduxFirstName = useAppSelector((state: RootState) =>
+    fieldSelector(state, { fieldName: "firstName" })
+  );
 
-  const [firstNameError, setFirstNameError] = React.useState("");
-  const [lastNameError, setLastNameError] = React.useState("");
-  const [emailError, setEmailError] = React.useState("");
-  const [phoneNumberError, setPhoneNumberError] = React.useState("");
+  const reduxLastName = useAppSelector((state: RootState) =>
+    fieldSelector(state, { fieldName: "lastName" })
+  );
+
+  const reduxEmail = useAppSelector((state: RootState) =>
+    fieldSelector(state, { fieldName: "email" })
+  );
+
+  const reduxPhoneNumber = useAppSelector((state: RootState) =>
+    fieldSelector(state, { fieldName: "phoneNumber" })
+  );
+
+  const firstName = reduxFirstName.value;
+  const lastName = reduxLastName.value;
+  const email = reduxEmail.value;
+  const phoneNumber = reduxPhoneNumber.value;
+
+  const firstNameError = reduxFirstName.errorMsg;
+  const lastNameError = reduxLastName.errorMsg;
+  const emailError = reduxEmail.errorMsg;
+  const phoneNumberError = reduxPhoneNumber.errorMsg;
 
   const history = useHistory();
 
-  const handleChangeNextPage = () => {
-    setFirstNameError("");
-    setLastNameError("");
-    setEmailError("");
-    setPhoneNumberError("");
+  const dispatch = useAppDispatch();
 
-    let error = false;
-
-    if (firstName && !firstName.trim().match(regex.firstName)) {
-      setFirstNameError("Vaše meno musí byť v rozmedzí 2-20 znakov");
-      error = true;
+  const handleChangePage = (route: string) => {
+    if (
+      firstNameError &&
+      firstName &&
+      firstName.trim().match(REGEX.firstName)
+    ) {
+      dispatch(setFieldError("firstName", ""));
     }
 
-    if (!lastName.trim().match(regex.lastName)) {
-      setLastNameError(
-        "Toto pole je povinné. Vaše priezvysko musí byť v rozmedzí 2-30 znakov"
-      );
-      error = true;
+    if (lastNameError && lastName.trim().match(REGEX.lastName)) {
+      dispatch(setFieldError("lastName", ""));
     }
 
-    if (email && !email.trim().match(regex.email)) {
-      setEmailError("Váš e-mail musí mať platný formát. Napr. dog@goodboy.sk");
-      error = true;
+    if (emailError && email && email.trim().match(REGEX.email)) {
+      dispatch(setFieldError("email", ""));
     }
 
-    if (phoneNumber && !phoneNumber.trim().match(regex.phoneNumber)) {
-      setPhoneNumberError(
-        "Zadajte slovenské alebo české telefónne číslo vo formáte +421/+420 xxx xxx xxx"
-      );
-      error = true;
+    if (
+      phoneNumberError &&
+      phoneNumber &&
+      phoneNumber.trim().match(REGEX.phoneNumber)
+    ) {
+      dispatch(setFieldError("phoneNumber", ""));
     }
 
-    if (error) {
-      return;
-    }
-
-    history.push("/zhrnutie-pomoci");
+    history.push(route);
   };
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") {
-        handleChangeNextPage();
+        handleChangePage("/zhrnutie-pomoci");
       }
 
       if (e.key === "ArrowLeft") {
-        history.push("/");
+        handleChangePage("/");
       }
     };
 
@@ -98,7 +103,9 @@ const SupportFormStepTwo: React.FC = () => {
             value={firstName}
             label="Meno"
             placeholder="Zadajte Vaše meno"
-            onValueChange={(value: string) => setFirstName(value)}
+            handleBlur={(value: string) =>
+              dispatch(setFieldValue("firstName", value))
+            }
             errorMsg={firstNameError}
           />
         </InputWrapper>
@@ -107,7 +114,9 @@ const SupportFormStepTwo: React.FC = () => {
             value={lastName}
             label="Priezvysko"
             placeholder="Zadajte Vaše priezvysko"
-            onValueChange={(value: string) => setLastName(value)}
+            handleBlur={(value: string) =>
+              dispatch(setFieldValue("lastName", value))
+            }
             errorMsg={lastNameError}
           />
         </InputWrapper>
@@ -116,7 +125,9 @@ const SupportFormStepTwo: React.FC = () => {
             value={email}
             label="Meno"
             placeholder="Zadajte Váš e-mail"
-            onValueChange={(value: string) => setEmail(value)}
+            handleBlur={(value: string) =>
+              dispatch(setFieldValue("email", value))
+            }
             errorMsg={emailError}
           />
         </InputWrapper>
@@ -126,17 +137,22 @@ const SupportFormStepTwo: React.FC = () => {
             value={phoneNumber}
             label="Telefónne číslo"
             placeholder="+421"
-            onValueChange={(value: string) => setPhoneNumber(value)}
+            handleBlur={(value: string) =>
+              dispatch(setFieldValue("phoneNumber", value))
+            }
             errorMsg={phoneNumberError}
           />
         </InputWrapper>
       </InputSubtitleWrapper>
       <ButtonsWrapper>
-        <Button text="Pokračovať" handleOnClick={handleChangeNextPage} />
+        <Button
+          text="Pokračovať"
+          handleOnClick={() => handleChangePage("/zhrnutie-pomoci")}
+        />
         <Button
           text="Späť"
           buttonStyle="secondary"
-          handleOnClick={() => history.push("/")}
+          handleOnClick={() => handleChangePage("/")}
         />
       </ButtonsWrapper>
     </SupportFormLayout>
