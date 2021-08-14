@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router";
 import FooterComponent from "./components/FooterComponent";
 import Navbar from "./components/Navbar";
+import NotFound from "./pages/NotFound";
 import SupportFormStepOne from "./pages/SupportForm/StepOne";
 import SupportFormStepThree from "./pages/SupportForm/StepThree";
 import SupportFormStepTwo from "./pages/SupportForm/StepTwo";
@@ -30,6 +31,9 @@ const App: React.FC = () => {
             </Route>
             <Route exact path="/zhrnutie-pomoci">
               <SupportFormStepThree />
+            </Route>
+            <Route>
+              <NotFound />
             </Route>
           </Switch>
         </Main>
