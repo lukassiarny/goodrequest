@@ -1,5 +1,16 @@
 export type ThemeType = typeof theme;
 
+export const mediaSize = {
+  xxs: "320px",
+  xs: "480px",
+  s: "600px",
+  m: "768px",
+  l: "992px",
+  xl: "1100px",
+  xxl: "1200px",
+  xxxl: "1350px",
+};
+
 export const theme = {
   colors: {
     primaryOne: "#CD8B65",

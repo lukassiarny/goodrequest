@@ -2,10 +2,15 @@ import { rem } from "polished";
 import React from "react";
 import styled, { css } from "styled-components";
 import { TYPE_OF_SUPPORT } from "../../config";
+import { mediaSize } from "../../theme/theme";
 
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
+
+  @media (max-width: ${mediaSize.s}) {
+    flex-direction: column;
+  }
 `;
 
 const Label = styled.label<{ isActive: boolean }>`
@@ -15,32 +20,57 @@ const Label = styled.label<{ isActive: boolean }>`
   padding: ${rem(24)};
   font-weight: 600;
   transition: 150ms ease-in-out;
+  display: flex;
+  align-items: center;
+
   ${({ isActive, theme }) =>
     isActive
       ? css`
           background: ${`linear-gradient(180deg, ${theme.colors.primaryOne} 0%, ${theme.colors.primaryTwo} 100%)`};
           color: #fff;
           border: ${rem(1)} solid transparent;
-          box-shadow: 0px 100px 80px rgba(0, 0, 0, 0.07),
-            0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198),
-            0px 22.3363px 17.869px rgba(0, 0, 0, 0.0417275),
-            0px 12.5216px 10.0172px rgba(0, 0, 0, 0.035),
-            0px 6.6501px 5.32008px rgba(0, 0, 0, 0.0282725),
-            0px 2.76726px 2.21381px rgba(0, 0, 0, 0.0196802);
+
+          @media (min-width: ${mediaSize.s}) {
+            box-shadow: 0px 100px 80px rgba(0, 0, 0, 0.07),
+              0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198),
+              0px 22.3363px 17.869px rgba(0, 0, 0, 0.0417275),
+              0px 12.5216px 10.0172px rgba(0, 0, 0, 0.035),
+              0px 6.6501px 5.32008px rgba(0, 0, 0, 0.0282725),
+              0px 2.76726px 2.21381px rgba(0, 0, 0, 0.0196802);
+          }
         `
       : css`
           color: ${theme.colors.textMiddle};
           border: ${rem(1)} solid ${({ theme }) => theme.colors.primaryOne};
         `}
 
+  @media (min-width: ${mediaSize.s}) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   &:first-of-type {
-    border-top-left-radius: ${rem(24)};
-    border-bottom-left-radius: ${rem(24)};
+    order: 1;
+    border-bottom-left-radius: ${rem(8)};
+    border-bottom-right-radius: ${rem(8)};
+
+    @media (min-width: ${mediaSize.s}) {
+      order: -1;
+      border-bottom-right-radius: ${rem(0)};
+      border-top-left-radius: ${rem(24)};
+      border-bottom-left-radius: ${rem(24)};
+    }
   }
 
   &:last-of-type {
-    border-top-right-radius: ${rem(24)};
-    border-bottom-right-radius: ${rem(24)};
+    border-top-right-radius: ${rem(8)};
+    border-top-left-radius: ${rem(8)};
+
+    @media (min-width: ${mediaSize.s}) {
+      border-top-left-radius: ${rem(0)};
+      border-top-right-radius: ${rem(24)};
+      border-bottom-right-radius: ${rem(24)};
+    }
   }
 `;
 
@@ -63,8 +93,10 @@ const Icon = styled.div`
   font-size: ${rem(30)};
   border-radius: 50%;
   margin-bottom: ${rem(16)};
+  margin-right: ${rem(16)};
   background: rgba(47, 47, 47, 0.16);
   font-weight: 400;
+  flex: 0 0 auto;
 `;
 
 export type RadioOptions = 0 | 1;

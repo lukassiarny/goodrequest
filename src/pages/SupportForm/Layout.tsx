@@ -3,6 +3,7 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import Steps from "../../components/Steps";
 import { Container } from "../../theme/layout";
+import { mediaSize } from "../../theme/theme";
 
 const opacityAnimation = keyframes`
   0% {
@@ -16,15 +17,28 @@ const opacityAnimation = keyframes`
 const StyledContainer = styled(Container)`
   display: flex;
   justify-content: center;
-  padding: ${rem(96)} 0;
+  padding-top: ${rem(56)};
+  padding-bottom: ${rem(56)};
+
+  @media (min-width: ${mediaSize.l}) {
+    padding: ${rem(96)} 0;
+  }
 `;
 
 const FormWrapper = styled.div`
-  flex: 0 1 50%;
-  padding-right: ${rem(15)};
   display: flex;
+  flex: 0 1 100%;
   flex-direction: column;
   align-items: flex-start;
+
+  @media (min-width: ${mediaSize.s}) {
+    flex: 0 1 83.333%;
+  }
+
+  @media (min-width: ${mediaSize.l}) {
+    flex: 0 1 50%;
+    padding-right: ${rem(15)};
+  }
 `;
 
 const InnerWrapper = styled.div`
@@ -44,18 +58,23 @@ const FormTitle = styled.h1`
 const ImageWrapper = styled.div`
   flex: 0 1 33.3333%;
   padding-left: ${rem(15)};
+  display: none;
 
   & > img {
     max-width: 100%;
     height: auto;
   }
+
+  @media (min-width: ${mediaSize.l}) {
+    display: block;
+  }
 `;
 
-export const SubtitleH3 = styled.h3`
+export const SubtitleH2 = styled.h3`
   font-weight: 800;
 `;
 
-export const SubtitleH4 = styled.h4`
+export const SubtitleH3 = styled.h4`
   font-weight: 800;
   font-size: ${rem(14)};
 `;
@@ -91,7 +110,7 @@ const SupportUsLayout: React.FC<Props> = ({
     <StyledContainer>
       <FormWrapper>
         <Steps currentStep={currentStep} />
-        <FormTitle>{title}</FormTitle>
+        {title && <FormTitle>{title}</FormTitle>}
         <InnerWrapper>{children}</InnerWrapper>
       </FormWrapper>
       <ImageWrapper>

@@ -97,18 +97,23 @@ const SupportFormStepThree: React.FC = () => {
     ) {
       error = true;
       dispatch(
-        setFieldError("shelter", "Vyberte útulok, ktorému chcete pômocť.")
+        setFieldError("shelter", "* Vyberte útulok, ktorému chcete pômocť.")
       );
     }
 
     if (selectedPrice === null) {
       error = true;
-      dispatch(setFieldError("price", "Vyberte sumu, ktorou chcete prispieť"));
+      dispatch(
+        setFieldError("price", "* Vyberte sumu, ktorou chcete prispieť")
+      );
     }
 
-    if (firstNameValue && !firstNameValue.trim().match(REGEX.firstName)) {
+    if (!firstNameValue.trim().match(REGEX.firstName)) {
       dispatch(
-        setFieldError("firstName", "Vaše meno musí byť v rozmedzí 2-20 znakov")
+        setFieldError(
+          "firstName",
+          "* Vaše meno musí byť v rozmedzí 2-20 znakov"
+        )
       );
       error = true;
     }
@@ -117,17 +122,17 @@ const SupportFormStepThree: React.FC = () => {
       dispatch(
         setFieldError(
           "lastName",
-          "Toto pole je povinné. Vaše priezvysko musí byť v rozmedzí 2-30 znakov"
+          "* Vaše priezvysko musí byť v rozmedzí 2-30 znakov"
         )
       );
       error = true;
     }
 
-    if (emailValue && !emailValue.trim().match(REGEX.email)) {
+    if (!emailValue.trim().match(REGEX.email)) {
       dispatch(
         setFieldError(
           "email",
-          "Váš e-mail musí mať platný formát. Napr. dog@goodboy.sk"
+          "* Váš e-mail musí mať platný formát. Napr. dog@goodboy.sk"
         )
       );
       error = true;
@@ -148,7 +153,7 @@ const SupportFormStepThree: React.FC = () => {
       dispatch(
         setFieldError(
           "confirmation",
-          "Musíte súhlasiť so spracovaním osobných údajov"
+          "* Musíte súhlasiť so spracovaním osobných údajov"
         )
       );
 
@@ -162,27 +167,29 @@ const SupportFormStepThree: React.FC = () => {
     setStatus("loading");
 
     try {
-      const o: Contribution = {
+      const contribution: Contribution = {
         firstName: firstNameValue,
         lastName: lastNameValue,
         email: emailValue,
-        phone: phoneNumberValue,
         value: selectedPrice.value,
       };
 
       if (selectedShelter.value) {
-        o.shelterID = selectedShelter.value;
+        contribution.shelterID = selectedShelter.value;
       }
 
       if (phoneNumberValue) {
-        o.phone = phoneNumberValue;
+        contribution.phone = phoneNumberValue;
       }
 
       await fetch(
         "https://frontend-assignment-api.goodrequest.com/api/v1/shelters/contribute",
         {
+          headers: {
+            "Content-Type": "application/json",
+          },
           method: "POST",
-          body: JSON.stringify(o),
+          body: JSON.stringify(contribution),
         }
       );
 
@@ -261,15 +268,16 @@ const SupportFormStepThree: React.FC = () => {
                 title="Suma ktorou chcem pomôcť"
                 error={!!selectedPriceError}
               >
-                {selectedPriceError ? selectedPriceError : selectedPrice.value}{" "}
-                €
+                {selectedPriceError
+                  ? selectedPriceError
+                  : selectedPrice?.value + " €" || "-"}
               </SummaryListItem>
               <SummaryListItem
                 title="Meno a priezvisko"
                 error={!!firstNameError || !!lastNameError}
               >
                 {firstNameError || lastNameError
-                  ? "Priezvysko je povinné pole a musí byť v rozmedzí 2-30 znakov. Krstné meno musí byť v rozmedzí 2-20 znakov."
+                  ? "* Vaše Meno musí byť v rozmedzí 2-20 znakov a Vaše priezvysko v rozmedzí 2-30 znakov."
                   : getFullName(firstNameValue, lastNameValue)}
               </SummaryListItem>
               <SummaryListItem title="E-mailová adresa" error={!!emailError}>
@@ -295,7 +303,9 @@ const SupportFormStepThree: React.FC = () => {
                     dispatch(setFieldError("confirmation", ""));
                   }
 
-                  dispatch(setFieldValue("confirmation", !confirmationValue));
+                  dispatch(
+                    setFieldValue<boolean>("confirmation", !confirmationValue)
+                  );
                 }}
                 errorMsg={confirmationError}
               />

@@ -23,6 +23,6 @@ export const TYPE_OF_SUPPORT: { 0: string; 1: string } = {
 export const REGEX = {
   firstName: /^.{2,20}$/,
   lastName: /^.{2,30}$/,
-  email: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+  email: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
   phoneNumber: /^(\+42[01])(\s*\d){9}$/,
 };

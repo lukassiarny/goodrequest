@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { mediaSize } from "./theme";
 
 const GlobalStyle = createGlobalStyle`
   *,
@@ -11,6 +12,11 @@ const GlobalStyle = createGlobalStyle`
 
   html {
     font-size: ${({ theme }) => theme.font.fontSizeDesktop};  
+
+    
+    @media (max-width: ${mediaSize.s}) {
+      font-size: ${({ theme }) => theme.font.fontSizeMobile};  
+    }
   }
 
   body {

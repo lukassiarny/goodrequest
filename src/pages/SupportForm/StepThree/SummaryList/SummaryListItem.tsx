@@ -2,7 +2,7 @@ import { rem } from "polished";
 import React from "react";
 import styled from "styled-components";
 
-import { SubtitleH4 } from "../../Layout";
+import { SubtitleH3 } from "../../Layout";
 
 const ListItem = styled.li`
   &:not(:last-of-type) {
@@ -25,7 +25,7 @@ type Props = {
 const SummaryListItem: React.FC<Props> = ({ title, error, children }) => {
   return (
     <ListItem>
-      <SubtitleH4>{title}</SubtitleH4>
+      <SubtitleH3>{title}</SubtitleH3>
       <Text error={error}>{children}</Text>
     </ListItem>
   );

@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Container } from "../../theme/layout";
+import { mediaSize } from "../../theme/theme";
 
 const Divider = styled.hr`
   border-bottom: none;
@@ -14,11 +15,28 @@ const Row = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  margin: ${rem(96)} 0;
+  margin: ${rem(56)} 0;
+
+  @media (min-width: ${mediaSize.s}) {
+    flex: 0 1 33.333%;
+  }
+
+  @media (min-width: ${mediaSize.l}) {
+    margin: ${rem(96)} 0;
+  }
 `;
 
 const LogoWrapper = styled.div`
-  flex: 0 1 33.333%;
+  display: none;
+  flex: 16.666%;
+
+  @media (min-width: ${mediaSize.s}) {
+    display: block;
+  }
+
+  @media (min-width: ${mediaSize.l}) {
+    flex: 0 1 33.333%;
+  }
 
   & > a {
     text-decoration: none;
@@ -28,11 +46,19 @@ const LogoWrapper = styled.div`
     & > :first-child {
       margin-right: ${rem(8)};
     }
+
+    & > :last-child {
+      display: none;
+
+      @media (min-width: ${mediaSize.l}) {
+        display: block;
+      }
+    }
   }
 `;
 
 const Columns = styled.div`
-  flex: 0 1 66.6666%;
+  flex: 66.6666%;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -40,10 +66,14 @@ const Columns = styled.div`
 
 const Col = styled.div`
   flex: 0 1 ${rem(170)};
-  margin: ${rem(16)};
+  margin: ${rem(16)} 0;
 
-  &:last-of-type {
-    margin: ${rem(16)} 0 ${rem(16)} ${rem(16)};
+  @media (min-width: ${mediaSize.s}) {
+    margin: ${rem(16)};
+
+    &:last-of-type {
+      margin: ${rem(16)} 0 ${rem(16)} ${rem(16)};
+    }
   }
 `;
 

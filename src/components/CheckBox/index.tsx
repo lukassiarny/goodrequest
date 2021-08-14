@@ -29,6 +29,7 @@ const Input = styled.input`
 `;
 
 const FakeInput = styled.div<{ error?: boolean }>`
+  flex: 0 0 auto;
   width: ${rem(34)};
   height: ${rem(34)};
   border-radius: ${rem(8)};

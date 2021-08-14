@@ -12,7 +12,7 @@ import InputSelectPrice, {
 } from "../../../components/InputSelectPrice";
 import { SHELTER_DEFAULT_OPTION, PRICE_OPTIONS } from "../../../config";
 import SupportFormLayout, {
-  SubtitleH3,
+  SubtitleH2,
   InputWrapper,
   InputSubtitleWrapper,
   ButtonsWrapper,
@@ -126,13 +126,13 @@ const SupportFormStepOne: React.FC = () => {
             if (active === 1 && shelterError) {
               dispatch(setFieldError("shelter", ""));
             }
-            dispatch(setFieldValue("typeOfSupport", active));
+            dispatch(setFieldValue<number>("typeOfSupport", active));
           }}
         />
       </InpurRadioWrapper>
       <InputSubtitleWrapper>
         <SubtitleAboutWrapper>
-          <SubtitleH3>O projekte</SubtitleH3>
+          <SubtitleH2>O projekte</SubtitleH2>
           <NotRequied>
             {typeOfSupportValue === 0 ? "Povinné" : "Nepovinné"}
           </NotRequied>
@@ -146,14 +146,14 @@ const SupportFormStepOne: React.FC = () => {
               if (shelterError) {
                 dispatch(setFieldError("shelter", ""));
               }
-              dispatch(setFieldValue("shelter", option));
+              dispatch(setFieldValue<Option>("shelter", option));
             }}
             errorMsg={shelterError}
           />
         </InputWrapper>
       </InputSubtitleWrapper>
       <InputSubtitleWrapper>
-        <SubtitleH3>Suma, ktorou chcem prispieť</SubtitleH3>
+        <SubtitleH2>Suma, ktorou chcem prispieť</SubtitleH2>
         <InputWrapper>
           <InputSelectPrice
             selected={priceValue}
@@ -162,7 +162,7 @@ const SupportFormStepOne: React.FC = () => {
               if (priceError) {
                 dispatch(setFieldError("price", ""));
               }
-              dispatch(setFieldValue("price", option));
+              dispatch(setFieldValue<OptionPrice | null>("price", option));
             }}
             errorMsg={priceError}
           />

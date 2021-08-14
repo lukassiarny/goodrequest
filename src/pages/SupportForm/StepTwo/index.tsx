@@ -9,7 +9,7 @@ import SupportFormLayout, {
   ButtonsWrapper,
   InputSubtitleWrapper,
   InputWrapper,
-  SubtitleH4,
+  SubtitleH3,
 } from "../Layout";
 import { fieldSelector } from "../selectors";
 import { REGEX } from "../../../config";
@@ -46,11 +46,7 @@ const SupportFormStepTwo: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const handleChangePage = (route: string) => {
-    if (
-      firstNameError &&
-      firstName &&
-      firstName.trim().match(REGEX.firstName)
-    ) {
+    if (firstNameError && firstName.trim().match(REGEX.firstName)) {
       dispatch(setFieldError("firstName", ""));
     }
 
@@ -58,7 +54,7 @@ const SupportFormStepTwo: React.FC = () => {
       dispatch(setFieldError("lastName", ""));
     }
 
-    if (emailError && email && email.trim().match(REGEX.email)) {
+    if (emailError && email.trim().match(REGEX.email)) {
       dispatch(setFieldError("email", ""));
     }
 
@@ -98,14 +94,14 @@ const SupportFormStepTwo: React.FC = () => {
       currentStep={2}
     >
       <InputSubtitleWrapper>
-        <SubtitleH4>O vás</SubtitleH4>
+        <SubtitleH3>O vás</SubtitleH3>
         <InputWrapper>
           <InputText
             value={firstName}
             label="Meno"
             placeholder="Zadajte Vaše meno"
             handleBlur={(value: string) =>
-              dispatch(setFieldValue("firstName", value))
+              dispatch(setFieldValue<string>("firstName", value))
             }
             errorMsg={firstNameError}
           />
@@ -116,7 +112,7 @@ const SupportFormStepTwo: React.FC = () => {
             label="Priezvysko"
             placeholder="Zadajte Vaše priezvysko"
             handleBlur={(value: string) =>
-              dispatch(setFieldValue("lastName", value))
+              dispatch(setFieldValue<string>("lastName", value))
             }
             errorMsg={lastNameError}
           />
@@ -127,7 +123,7 @@ const SupportFormStepTwo: React.FC = () => {
             label="E-mailová adresa"
             placeholder="Zadajte Váš e-mail"
             handleBlur={(value: string) =>
-              dispatch(setFieldValue("email", value))
+              dispatch(setFieldValue<string>("email", value))
             }
             errorMsg={emailError}
           />
@@ -139,7 +135,7 @@ const SupportFormStepTwo: React.FC = () => {
             label="Telefónne číslo"
             placeholder="+421"
             handleBlur={(value: string) =>
-              dispatch(setFieldValue("phoneNumber", value))
+              dispatch(setFieldValue<string>("phoneNumber", value))
             }
             errorMsg={phoneNumberError}
           />

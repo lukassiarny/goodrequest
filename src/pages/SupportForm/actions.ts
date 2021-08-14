@@ -1,11 +1,6 @@
-import { Option } from "../../components/InputSelect";
-import { OptionPrice } from "../../components/InputSelectPrice";
 import { FieldNames } from "./formReducer";
 
-export const setFieldValue = (
-  fieldName: FieldNames,
-  value: string | number | boolean | Option | OptionPrice | null
-) => ({
+export const setFieldValue = <T>(fieldName: FieldNames, value: T) => ({
   type: "SET_FIELD_VALUE",
   payload: { value, fieldName },
 });
