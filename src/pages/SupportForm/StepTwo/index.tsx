@@ -110,7 +110,7 @@ const SupportFormStepTwo: React.FC = () => {
           <InputText
             value={lastName}
             label="Priezvysko"
-            placeholder="Zadajte Vaše priezvysko"
+            placeholder="Zadajte Vaše priezvisko"
             handleBlur={(value: string) =>
               dispatch(setFieldValue<string>("lastName", value))
             }

@@ -122,7 +122,7 @@ const SupportFormStepThree: React.FC = () => {
       dispatch(
         setFieldError(
           "lastName",
-          "* Vaše priezvysko musí byť v rozmedzí 2-30 znakov"
+          "* Vaše priezvisko musí byť v rozmedzí 2-30 znakov"
         )
       );
       error = true;
@@ -277,7 +277,7 @@ const SupportFormStepThree: React.FC = () => {
                 error={!!firstNameError || !!lastNameError}
               >
                 {firstNameError || lastNameError
-                  ? "* Vaše Meno musí byť v rozmedzí 2-20 znakov a Vaše priezvysko v rozmedzí 2-30 znakov."
+                  ? "* Vaše Meno musí byť v rozmedzí 2-20 znakov a Vaše priezisko v rozmedzí 2-30 znakov."
                   : getFullName(firstNameValue, lastNameValue)}
               </SummaryListItem>
               <SummaryListItem title="E-mailová adresa" error={!!emailError}>
